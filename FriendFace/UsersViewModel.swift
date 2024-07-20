@@ -10,6 +10,7 @@ import Foundation
 class UsersViewModel: ObservableObject {
     @Published var users: [User] = []
     @Published var errorMessage: String?
+    @Published var showError = false
     
     let networkManager = NetworkManager()
     
@@ -23,10 +24,12 @@ class UsersViewModel: ObservableObject {
             } catch NetworkError.invalidURL {
                 DispatchQueue.main.async {
                     self.errorMessage = "Invalid URL."
+                    self.showError = true
                 }
             } catch NetworkError.decodingError {
                 DispatchQueue.main.async {
                     self.errorMessage = "There was an error decoding."
+                    self.showError = true
                 }
             }
         }
