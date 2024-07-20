@@ -8,18 +8,20 @@
 import Foundation
 
 struct User: Codable, Identifiable {
-    var id = UUID()
-    let isActive: Bool
+    let id: String
     let name: String
     let age: Int
     let company: String
     let email: String
     let address: String
     let about: String
+    let registered: Date
+    let tags: [String]
     let friends: [Friend]
+    let isActive: Bool
 }
 
 struct Friend: Codable, Identifiable {
-    var id = UUID()
-    var name: String
+    let id: String
+    let name: String
 }
