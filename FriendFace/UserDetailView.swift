@@ -14,8 +14,8 @@ struct UserDetailView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 10) {
                 
-                Text("Age: \(user.age)")
-                Text("Company: \(user.company)")
+                Text("\(user.age)")
+                Text("\(user.company)")
                 Text("Email: \(user.email)")
                 Text("Address: \(user.address)")
                 Text("\(user.about)")
@@ -25,11 +25,18 @@ struct UserDetailView: View {
                     .font(.headline)
                 Text(user.tags.joined(separator: ", "))
                 
+                Spacer()
+                
                 Text("Friends")
                     .font(.headline)
                 
-                List(user.friends) { friend in
-                    Text(friend.name)
+                ScrollView {
+                    ForEach(user.friends) { friend in
+                        Text(friend.name)
+                            .padding(20)
+                            .background(.white.opacity(0.8))
+                            .clipShape(.capsule)
+                    }
                 }
             }
             .padding()
