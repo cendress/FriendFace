@@ -12,35 +12,83 @@ struct UserDetailView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 20) {
                 
-                Text("\(user.age)")
-                Text("\(user.company)")
-                Text("Email: \(user.email)")
-                Text("Address: \(user.address)")
-                Text("\(user.about)")
-                    .padding()
-                
-                Text("Tags")
-                    .font(.headline)
-                Text(user.tags.joined(separator: ", "))
-                
-                Spacer()
-                
-                Text("Friends")
-                    .font(.headline)
-                
-                ScrollView {
-                    ForEach(user.friends) { friend in
-                        Text(friend.name)
-                            .padding(20)
-                            .background(.white.opacity(0.8))
-                            .clipShape(.capsule)
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(user.name)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                    
+                    Text(user.company)
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                    
+                    HStack {
+                        Image(systemName: "envelope.fill")
+                            .foregroundColor(.blue)
+                        Text(user.email)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "house.fill")
+                            .foregroundColor(.green)
+                        Text(user.address)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "person.fill")
+                            .foregroundColor(.purple)
+                        Text("\(user.age) years old")
+                    }
+                    
+                    ScrollView {
+                        Text(user.about)
+                            .font(.body)
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10)
                     }
                 }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white)
+                        .shadow(radius: 5)
+                )
+                .frame(maxWidth: .infinity)
+                
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Tags")
+                        .font(.headline)
+                    
+                    Text(user.tags.joined(separator: ", "))
+                        .padding(10)
+                        .background(Color.yellow.opacity(0.2))
+                        .cornerRadius(10)
+                }
+                
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Friends")
+                        .font(.headline)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(user.friends) { friend in
+                                Text(friend.name)
+                                    .padding(10)
+                                    .background(Color.blue.opacity(0.2))
+                                    .clipShape(Capsule())
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+                
+                Spacer()
             }
             .padding()
-            .navigationTitle(user.name)
+            .background(Color(UIColor.systemGroupedBackground))
+            .navigationTitle("Details")
         }
     }
 }
