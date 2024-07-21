@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = UsersViewModel()
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.users) { user in
                     NavigationLink(destination: UserDetailView(user: user)) {
-                        
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(user.name)
@@ -35,6 +35,7 @@ struct ContentView: View {
             .navigationTitle("Users")
             .onAppear {
                 viewModel.fetchUsers()
+                viewModel.saveUsers(modelContext: modelContext)
             }
             .alert(isPresented: $viewModel.showError) {
                 Alert(

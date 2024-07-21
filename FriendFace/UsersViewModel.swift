@@ -7,11 +7,8 @@
 
 import Foundation
 import SwiftData
-import SwiftUI
 
 class UsersViewModel: ObservableObject {
-    @Environment(\.modelContext) var modelContext
-    
     @Published var users: [User] = []
     @Published var errorMessage: String?
     @Published var showError = false
@@ -22,24 +19,24 @@ class UsersViewModel: ObservableObject {
         Task {
             do {
                 let fetchedUsers = try await networkManager.fetchUsers()
-                DispatchQueue.main.async {
-                    self.users = fetchedUsers
-                }
+                await updateUsers(fetchedUsers)
             } catch NetworkError.invalidURL {
-                DispatchQueue.main.async {
-                    self.errorMessage = "Invalid URL."
-                    self.showError = true
-                }
+                await showError("Invalid URL.")
             } catch NetworkError.decodingError {
-                DispatchQueue.main.async {
-                    self.errorMessage = "There was an error decoding."
-                    self.showError = true
-                }
+                await showError("There was an error decoding.")
+            } catch {
+                await showError("An unexpected error occurred.")
             }
         }
     }
     
-    private func saveUsers() {
+    @MainActor
+    private func updateUsers(_ fetchedUsers: [User]) {
+        self.users = fetchedUsers
+    }
+    
+    @MainActor
+    func saveUsers(modelContext: ModelContext) {
         for user in users {
             modelContext.insert(user)
         }
@@ -47,7 +44,13 @@ class UsersViewModel: ObservableObject {
         do {
             try modelContext.save()
         } catch {
-            print("Failed to save users.")
+            print("Failed to save users: \(error).")
         }
+    }
+    
+    @MainActor
+    private func showError(_ message: String) {
+        self.errorMessage = message
+        self.showError = true
     }
 }
