@@ -6,8 +6,12 @@
 //
 
 import Foundation
+import SwiftData
+import SwiftUI
 
 class UsersViewModel: ObservableObject {
+    @Environment(\.modelContext) var modelContext
+    
     @Published var users: [User] = []
     @Published var errorMessage: String?
     @Published var showError = false
@@ -32,6 +36,18 @@ class UsersViewModel: ObservableObject {
                     self.showError = true
                 }
             }
+        }
+    }
+    
+    private func saveUsers() {
+        for user in users {
+            modelContext.insert(user)
+        }
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save users.")
         }
     }
 }

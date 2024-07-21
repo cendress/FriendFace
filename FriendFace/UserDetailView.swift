@@ -93,8 +93,8 @@ struct UserDetailView: View {
     }
 }
 
-#Preview {
-    let exampleUser = User(id: "id", name: "Christopher", age: 23, company: "MoodMe", email: "christopher@gmail.com", address: "912 Orange St., Baltimore MD", about: "An iOS developer that loves to build apps.", registered: Date.now, tags: ["movies", "outdoors", "meditation"], friends: [Friend(id: "id", name: "Fred")], isActive: true)
-    
-    return UserDetailView(user: exampleUser)
-}
+//#Preview {
+//    let exampleUser = User(id: "id", name: "Christopher", age: 23, company: "MoodMe", email: "christopher@gmail.com", address: "912 Orange St., Baltimore MD", about: "An iOS developer that loves to build apps.", registered: Date.now, tags: ["movies", "outdoors", "meditation"], friends: [Friend(id: "id", name: "Fred")], isActive: true)
+//    
+//    return UserDetailView(user: exampleUser)
+//}
