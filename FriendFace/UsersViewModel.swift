@@ -15,28 +15,30 @@ class UsersViewModel: ObservableObject {
     
     let networkManager = NetworkManager()
     
-    func fetchUsers() {
+    func fetchUsers(modelContext: ModelContext) {
         Task {
             do {
                 let fetchedUsers = try await networkManager.fetchUsers()
-                await updateUsers(fetchedUsers)
+                await MainActor.run {
+                    self.users = fetchedUsers
+                    self.saveUsers(fetchedUsers, modelContext: modelContext)
+                }
             } catch NetworkError.invalidURL {
-                await showError("Invalid URL.")
+                await MainActor.run {
+                    self.errorMessage = "Invalid URL."
+                    self.showError = true
+                }
             } catch NetworkError.decodingError {
-                await showError("There was an error decoding.")
-            } catch {
-                await showError("An unexpected error occurred.")
+                await MainActor.run {
+                    self.errorMessage = "There was an error decoding."
+                    self.showError = true
+                }
             }
         }
     }
     
     @MainActor
-    private func updateUsers(_ fetchedUsers: [User]) {
-        self.users = fetchedUsers
-    }
-    
-    @MainActor
-    func saveUsers(modelContext: ModelContext) {
+    private func saveUsers(_ users: [User], modelContext: ModelContext) {
         for user in users {
             modelContext.insert(user)
         }
@@ -46,11 +48,5 @@ class UsersViewModel: ObservableObject {
         } catch {
             print("Failed to save users: \(error).")
         }
-    }
-    
-    @MainActor
-    private func showError(_ message: String) {
-        self.errorMessage = message
-        self.showError = true
     }
 }

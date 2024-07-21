@@ -5,6 +5,7 @@
 //  Created by Christopher Endress on 7/20/24.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
@@ -34,8 +35,7 @@ struct ContentView: View {
             }
             .navigationTitle("Users")
             .onAppear {
-                viewModel.fetchUsers()
-                viewModel.saveUsers(modelContext: modelContext)
+                viewModel.fetchUsers(modelContext: modelContext)
             }
             .alert(isPresented: $viewModel.showError) {
                 Alert(
